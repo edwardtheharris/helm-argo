@@ -1,26 +1,36 @@
 ---
-abstract: This is the security policy of this project, such as it is.
-authors: GitHub
-date: 2024-04-28
+abstract: >-
+  Argo Helm is a collection of **community maintained** charts.
+authors:
+   - name: Xander Harris
+     email: xandertheharris@gmail.com
+date: 2024-08-04
 title: Security Policy
 ---
 
-## Supported Versions
+## Supported Versions and Upstream Reporting
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Each helm chart currently supports the designated application version in the
+Chart.yaml. There is a chance a security issue you've discovered may not be
+with the helm chart but with the upstream application. Please visit that
+application's Security policy document to find out how to report the security
+issue.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+* [Security Policy for Argo Workflows](https://github.com/argoproj/argo-workflows/blob/master/SECURITY.md)
+* [Security Policy for Argo Events](https://github.com/argoproj/argo-events/blob/master/SECURITY.md)
+* [Security Policy for Argo Rollouts](https://github.com/argoproj/argo-rollouts/blob/master/docs/security.md)
+* [Security Policy for Argo CD](https://github.com/argoproj/argo-cd/blob/master/SECURITY.md)
+* [Security Policy for Argo CD Image Updater](https://github.com/argoproj-labs/argocd-image-updater/blob/master/SECURITY.md)
 
-## Reporting a Vulnerability
+## Reporting a Vulnerability for Argo Helm Charts
 
-Use this section to tell people how to report a vulnerability.
+We have enabled the ability to privately report security issues through the
+Security tab above.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+[Here are the details on how to file](https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing/privately-reporting-a-security-vulnerability#privately-reporting-a-security-vulnerability)
+on how to do that
+
+A repository owner/maintainer will respond as fast as possible to coordinate
+confirmation of issue and remediation.
+
+Thank you for helping to ensure this code stays secure.

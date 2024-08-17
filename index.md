@@ -28,6 +28,8 @@ tests/index.md
 :caption: meta
 
 .github/index
+code_of_conduct
+contributing
 license
 readme
 security
