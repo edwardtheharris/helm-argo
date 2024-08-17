@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.nameOverride }}
+spec:
+  selector:
+    matchLabels:
+      ss.kubernetes.io/name: {{ .Values.nameOverride }}
+      ss.kubernetes.io/instance: {{ .Release.Name }}
+  serviceName: {{ .Values.nameOverride }}
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        ss.kubernetes.io/name: {{ .Values.nameOverride }}
+        ss.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: nginx
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 80
+              name: http
+          volumeMounts:
+            - name: nginx
+              mountPath: /etc/nginx
+  volumeClaimTemplates:
+  - metadata:
+      name: nginx
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: {{ .Values.persistence.size }}
+      storageClassName: csi-driver-lvm-linear

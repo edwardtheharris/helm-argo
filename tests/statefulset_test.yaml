@@ -1,0 +1,38 @@
+###
+# ```{rubric} StatefulSet Test Suite
+# ```
+# ---
+# Tests to validate the deployment of the described StatefulSet.
+#
+# ```{literalinclude} /tests/statefulset_test.yaml
+# :language: yaml
+# :start-at: "suite: test for statefulset\n"
+# :end-before: "###\n"
+# ```
+suite: test for statefulset
+release:
+  name: chart
+templates:
+- templates/statefulset.yaml
+values:
+- ../values.yaml
+
+###
+# ```{rubric} StatefulSet Tests
+# ```
+# ---
+# Tests for StatefulSet Template
+#
+# ```{literalinclude} /tests/statefulset_test.yaml
+# :language: yaml
+# :start-at: "tests:\n"
+# ```
+tests:
+- asserts:
+  - isKind:
+      of: StatefulSet
+  - equal:
+      path: metadata.name
+      value: template-replace-
+  it: should be a StatefulSet
+
