@@ -25,6 +25,21 @@ affinity:
         - linux
 
 ###
+# ```{rubric} ArgoCD
+# ```
+# ---
+# Configuration for the ArgoCD chart.
+#
+# ```{literalinclude} /values.yaml
+# :caption: argo
+# :language: yaml
+# :start-at: "argocd:\n"
+# :end-before: "###\n"
+# ```
+argocd:
+  enabled: true
+
+###
 # ```{rubric} Autoscaling
 # ```
 # ---
