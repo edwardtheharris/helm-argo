@@ -1,5 +1,8 @@
 ---
 abstract: Argo Helm is a collection of **community maintained** charts.
+authors:
+  - name: Xander Harris
+    email: xandertheharris@gmmail.com
 date: 2024-08-17
 title: Argo Helm Charts
 ---

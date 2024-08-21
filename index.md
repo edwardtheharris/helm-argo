@@ -22,7 +22,7 @@ title: Template Helm Chart
 :caption: contents
 
 tests/index.md
-charts/argo-cd/readme
+charts/argo-cd/index
 ```
 
 ```{toctree}
@@ -46,6 +46,10 @@ security
 argo-cd
    A declarative, GitOps continuous delivery tool for {term}`Kubernetes`.
    More information is available [here](https://github.com/argoproj/argo-cd).
+
+ArtifactHub
+   A centralized location for Helm charts and artifacts. More information
+   is available [here](https://artifacthub.io/packages/helm/argo/argo-cd).
 
 GitHub
    Most likely the site this repository is hosted on. More information is

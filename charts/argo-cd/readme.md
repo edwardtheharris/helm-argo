@@ -50,7 +50,9 @@ on separate nodes.
 
 ### HA mode with autoscaling
 
-```yaml
+```{code-block} yaml
+:caption: autoscaling HA mode
+
 redis-ha:
   enabled: true
 
@@ -73,7 +75,9 @@ applicationSet:
 
 ### HA mode without autoscaling
 
-```yaml
+```{code-block} yaml
+:caption: HA mode
+
 redis-ha:
   enabled: true
 
@@ -291,24 +295,29 @@ cd argo-cd
 git diff v1.8.7 v2.0.0 -- manifests/install.yaml
 ```
 
-Changes in the `CustomResourceDefinition` resources shall be fixed easily by copying 1:1 from the
-[`manifests/crds` folder](https://github.com/argoproj/argo-cd/tree/master/manifests/crds) into this
+Changes in the `CustomResourceDefinition` resources shall be fixed easily by
+copying 1:1 from the
+[`manifests/crds` folder](https://github.com/argoproj/argo-cd/tree/master/manifests/crds)
+into this
 [`charts/argo-cd/templates/crds` folder](https://github.com/argoproj/argo-helm/tree/master/charts/argo-cd/templates/crds).
 
 ### Custom resource definitions
 
-Some users would prefer to install the CRDs _outside_ of the chart. You can disable the CRD installation of this chart
-by using `--set crds.install=false` when installing the chart.
+Some users would prefer to install the CRDs _outside_ of the chart. You can
+disable the CRD installation of this chart
+by using `--set crds.install=false`{l=shell} when installing the chart.
 
 Helm cannot upgrade custom resource definitions in the `<chart>/crds` folder
 [by design](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations).
-Starting with 5.2.0, the CRDs have been moved to `<chart>/templates` to address this design decision.
+Starting with 5.2.0, the CRDs have been moved to `<chart>/templates`
+to address this design decision.
 
-If you are using Argo CD chart version prior to 5.2.0 or have elected to manage the Argo CD CRDs outside of the chart,
-please use `kubectl` to upgrade CRDs manually from [templates/crds](templates/crds/) folder or via the manifests from
-the upstream project repo:
+If you are using Argo CD chart version prior to 5.2.0 or have elected to
+manage the Argo CD CRDs outside of the chart,
+please use `kubectl` to upgrade CRDs manually from `templates/crds` folder or
+via the manifests from the upstream project repo:
 
-```bash
+```{code-block} shell
 kubectl apply -k "https://github.com/argoproj/argo-cd/manifests/crds?ref=<appVersion>"
 
 # Eg. version v2.4.9
@@ -1191,8 +1200,8 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| notifications.affinity | object | `{}` (defaults to global.affinity preset) | Assign custom [affinity] rules |
-| notifications.argocdUrl | string | `""` (defaults to https://`global.domain`) | Argo CD dashboard url; used in place of {{.context.argocdUrl}} in templates |
+`notifications.affinity`|object|`{}` (defaults to global.affinity preset)|Assign custom affinity rules
+`notifications.argocdUrl`|string|`""` (defaults to https://`global.domain`)|Argo CD dashboard url; used in place of `{{.context.argocdUrl}}` in templates
 | notifications.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account into the pod. |
 | notifications.clusterRoleRules.rules | list | `[]` | List of custom rules for the notifications controller's ClusterRole resource |
 | notifications.cm.create | bool | `true` | Whether helm chart creates notifications controller config map |
