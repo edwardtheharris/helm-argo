@@ -39,7 +39,7 @@ affinity:
 argocd:
   enabled: true
 
-###
+###``
 # ```{rubric} Autoscaling
 # ```
 # ---
@@ -59,6 +59,8 @@ autoscaling:
   enabled: false
   maxReplicas: 0
   minReplicas: 0
+  targetCPUUtilizationPercentage: ''
+  targetMemoryUtilizationPercentage: ''
 
 ###
 # ```{rubric} template-replace- Config
@@ -83,7 +85,7 @@ config:
     name: celery-config
     results: 'redis://redis.redis.svc.cluster.local:6379/0'
     root: '/opt/celery'
-  name: template-replace--config
+  name: argo-config
 
 ###
 # ```{rubric} Database
@@ -99,7 +101,7 @@ config:
 # :end-before: "###\n"
 # ```
 database:
-  database: template-replace-
+  database: argo
   engine: django.db.backends.postgresql
   host: postgresql.postgresql.svc.cluster.local
   name: postgres
@@ -118,10 +120,10 @@ database:
 # ```{literalinclude} /values.yaml
 # :caption: fullname override
 # :language: yaml
-# :start-at: "fullnameOverride: \"template-replace-\"\n"
+# :start-at: "fullnameOverride: \"argo\"\n"
 # :end-before: "###\n"
 # ```
-fullnameOverride: "template-replace-"
+fullnameOverride: "argo"
 
 ###
 # ```{rubric} Container image settings
@@ -135,14 +137,14 @@ fullnameOverride: "template-replace-"
 # :start-at: "image:\n"
 # :end-before: "###\n"
 # ```
-image:
-  pullPolicy: Always
-  repository: ghcr.io/edwardtheharris/helm-template-replace-/template-replace-
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: '0.0.1.rc29'
-  secret:
-    name: ghcr
-    data: ''
+# image:
+#   pullPolicy: Always
+#   repository: ghcr.io/edwardtheharris/helm-template-replace-/template-replace-
+#   # Overrides the image tag whose default is the chart appVersion.
+#   tag: '0.0.1.rc29'
+#   secret:
+#     name: ghcr
+#     data: ''
 
 ###
 # ```{rubric} Image Pull Secrets
@@ -186,7 +188,7 @@ ingress:
   className: "nginx"
   enabled: true
   hosts:
-  - host: template-replace-.svc.cluster.local
+  - host: argo.argo.svc.cluster.local
     paths:
     - path: /
       pathType: ImplementationSpecific
@@ -204,22 +206,22 @@ ingress:
 # :start-at: "livenessProbe:\n"
 # :end-before: "###\n"
 # ```
-livenessProbe:
-  exec:
-    command:
-    - /opt/template-replace-/bin/template-replace--server
-    - status
-  # When to give up and restart the container
-  failureThreshold: 3
-  # Delay before the first probe is initiated
-  initialDelaySeconds: 30
-  # How often to perform the probe
-  periodSeconds: 10
-  # Minimum consecutive successes for the probe to
-  # be considered successful after having failed
-  successThreshold: 1
-  # When the probe times out
-  timeoutSeconds: 5
+# livenessProbe:
+#   exec:
+#     command:
+#     - /opt/argo-server/bin/argo-server
+#     - status
+#   # When to give up and restart the container
+#   failureThreshold: 3
+#   # Delay before the first probe is initiated
+#   initialDelaySeconds: 30
+#   # How often to perform the probe
+#   periodSeconds: 10
+#   # Minimum consecutive successes for the probe to
+#   # be considered successful after having failed
+#   successThreshold: 1
+#   # When the probe times out
+#   timeoutSeconds: 5
 
 ###
 # ```{rubric} Name Override
@@ -230,10 +232,10 @@ livenessProbe:
 # ```{literalinclude} /values.yaml
 # :caption: name override
 # :language: yaml
-# :start-at: "nameOverride: \"template-replace-\"\n"
+# :start-at: "nameOverride: \"argo\"\n"
 # :end-before: "###\n"
 # ```
-nameOverride: "template-replace-"
+nameOverride: "argo"
 
 ###
 # ```{rubric} Node Selector
@@ -265,8 +267,8 @@ nodeSelector:
 persistence:
   claim:
     enabled: false
-  name: template-replace-
-  size: 50Gi
+  name: argo-pvc
+  size: 20Gi
   storageClass: csi-driver-lvm-linear
 
 ###
@@ -296,7 +298,7 @@ podAnnotations: {}
 # :end-before: "###\n"
 # ```
 podLabels:
-  app: template-replace-
+  app.kubernetes.io/name: argo
 
 ###
 # ```{rubric} Pod Security Context
@@ -416,12 +418,12 @@ securityContext: {}
 # ```
 service:
   enabled: true
-  port: 8000
-  targetPort: 8000
-  type: ClusterIP
+  port: 8080
+  targetPort: 8080
+  type: LoadBalancer
   selectorLabels:
     app.kubernetes.io/component: network
-    app.kubernetes.io/name: template-replace-
+    app.kubernetes.io/name: argo-server
 
 ###
 # ```{rubric} Service Account
@@ -438,14 +440,14 @@ service:
 serviceAccount:
   # Annotations to add to the service account
   annotations:
-    sa.kubernetes.io/name: template-replace-
+    app.kubernetes.io/name: argo
   # Automatically mount a ServiceAccount's API credentials?
   automount: true
   # Specifies whether a service account should be created
   create: true
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: "template-replace-"
+  name: argo
 
 ###
 # ```{rubric} Super User Config

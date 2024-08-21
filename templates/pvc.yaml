@@ -9,7 +9,7 @@
 #     - kubernetes.io/pvc-protection
 #   labels:
 #     app.kubernetes.io/component: primary
-#     app.kubernetes.io/instance: postgresql
+#     app.kubernetes.io/instance: argo
 #     app.kubernetes.io/name: postgres
 #   name: postgres
 #   namespace: postgres

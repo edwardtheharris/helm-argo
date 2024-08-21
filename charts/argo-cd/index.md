@@ -12,4 +12,14 @@ title: Argo CD Chart Index
 ```{toctree}
 changelog
 readme
-````
+```
+
+## ArgoCD Chart
+
+```{autoyaml} charts/argo-cd/Chart.yaml
+```
+
+## ArgoCD Default Values
+
+```{autoyaml} charts/argo-cd/values.yaml
+```
