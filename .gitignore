@@ -7,3 +7,4 @@ _build
 .venv/
 reflog
 *.tgz
+secrets
