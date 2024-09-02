@@ -1,15 +1,18 @@
+{{- if .Values.service.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "argo.fullname" . }}
+  name: {{ .Values.service.name }}
   labels:
-    {{- include "argo.labels" . | nindent 4 }}
+    {{ .Values.service.selectorLabels | toYaml | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  selector:
+    {{ .Values.service.selectorLabels | toYaml | nindent 4 }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: 5432
-      protocol: TCP
-      name: postgres
-  selector:
-    {{- include "argo.selectorLabels" . | nindent 4 }}
+      targetPort: {{ .Values.service.targetPort }}
+  externalIPs:
+    - 192.168.5.40
+    - 192.168.5.50
+  type: {{ .Values.service.type }}
+{{- end -}}

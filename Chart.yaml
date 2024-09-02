@@ -50,7 +50,7 @@ appVersion: "0.0.2"
 #   version: ~2
 # ```
 dependencies:
-- condition: argocd.enabled
+- condition: argo-cd.enabled
   name: argo-cd
   repository: file://./charts/argo-cd
   version: 7.4.4

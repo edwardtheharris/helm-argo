@@ -36,17 +36,25 @@ affinity:
 # :start-at: "argocd:\n"
 # :end-before: "###\n"
 # ```
-argocd:
+argo-cd:
   enabled: true
   certificate:
     enabled: true
 
   ingress:
-    enabled: true
-    ingressClassName: nginx
     annotations:
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
       nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    enabled: true
+    ingressClassName: nginx
+  namespace: argo
+  redis:
+    livenessProbe:
+      enabled: true
+    readinessProbe:
+      enabled: true
+  selectorLabels:
+    kubernetes.io/os: linux
   server:
     certificateSecret:
       enabled: true
@@ -195,19 +203,34 @@ imagePullSecrets:
 #    hosts:
 #      - chart-example.local
 # ````
-# certificate:
-#   enabled: true
+configs:
+  params:
+    server.insecure: true
 
 ingress:
-  enabled: false
-  controller: generic
-  path: /
-  pathType: Prefix
+  enabled: true
   ingressClassName: nginx
-  tls: true
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+  extraTls:
+  - hosts:
+    - argo.breeze-blocks.net
+    # Based on the ingress controller used secret might be optional
+    secretName: argocd-secret
+
+server:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    extraTls:
+    - hosts:
+      - argo.breeze-blocks.net
+      # Based on the ingress controller used secret might be optional
+      secretName: argocd-secret
 
 ###
 # ```{rubric} Liveness Probe
@@ -433,6 +456,7 @@ securityContext: {}
 # ```
 service:
   enabled: true
+  name: argocd-server
   port: 8080
   targetPort: 8080
   type: LoadBalancer
