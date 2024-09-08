@@ -36,28 +36,16 @@ affinity:
 # :start-at: "argocd:\n"
 # :end-before: "###\n"
 # ```
-argo-cd:
-  enabled: true
-  certificate:
+redis:
+  livenessProbe:
     enabled: true
-
-  ingress:
-    annotations:
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-      nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+  readinessProbe:
     enabled: true
-    ingressClassName: nginx
-  namespace: argo
-  redis:
-    livenessProbe:
-      enabled: true
-    readinessProbe:
-      enabled: true
-  selectorLabels:
-    kubernetes.io/os: linux
-  server:
-    certificateSecret:
-      enabled: true
+selectorLabels:
+  kubernetes.io/os: linux
+server:
+  certificateSecret:
+    enabled: true
 
 ###``
 # ```{rubric} Autoscaling
@@ -81,55 +69,6 @@ autoscaling:
   minReplicas: 0
   targetCPUUtilizationPercentage: ''
   targetMemoryUtilizationPercentage: ''
-
-###
-# ```{rubric} template-replace- Config
-# ```
-# ---
-# Configure the template-replace- deployment.
-#
-# ```{literalinclude} /values.yaml
-# :caption: config
-# :language: yaml
-# :start-at: "config:\n"
-# :end-before: "###\n"
-# ```
-config:
-  allowed_hosts: "*"
-  caches_backend: django_redis.cache.RedisCache
-  celery:
-    img:
-      repository: ghcr.io/edwardtheharris/helm-template-replace-/celery
-      tag: '0.0.1.rc29'
-    broker: 'redis://redis.redis.svc.cluster.local:6379/0'
-    name: celery-config
-    results: 'redis://redis.redis.svc.cluster.local:6379/0'
-    root: '/opt/celery'
-  name: argo-config
-
-###
-# ```{rubric} Database
-# ```
-# ---
-# Configure a relational database connection, MySQL and PostgreSQL are
-# supported.
-#
-# ```{literalinclude} /values.yaml
-# :caption: database
-# :language: yaml
-# :start-at: "database:\n"
-# :end-before: "###\n"
-# ```
-database:
-  database: argo
-  engine: django.db.backends.postgresql
-  host: postgresql.postgresql.svc.cluster.local
-  name: postgres
-  password: ""
-  port: '5432'
-  secretfile: secrets/secrets.yaml
-  timeout: '300'
-  username: ""
 
 ###
 # ```{rubric} Full Name Override
@@ -203,34 +142,18 @@ imagePullSecrets:
 #    hosts:
 #      - chart-example.local
 # ````
-configs:
-  params:
-    server.insecure: true
-
 ingress:
-  enabled: true
-  ingressClassName: nginx
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-  extraTls:
-  - hosts:
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+  enabled: true
+  ingressClassName: nginx
+  hosts:
+  - argo.breeze-blocks.net
+  tls:
+  - secretName: argocd-secret
+    hosts:
     - argo.breeze-blocks.net
-    # Based on the ingress controller used secret might be optional
-    secretName: argocd-secret
-
-server:
-  ingress:
-    enabled: true
-    ingressClassName: nginx
-    annotations:
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-    extraTls:
-    - hosts:
-      - argo.breeze-blocks.net
-      # Based on the ingress controller used secret might be optional
-      secretName: argocd-secret
 
 ###
 # ```{rubric} Liveness Probe
@@ -304,7 +227,7 @@ nodeSelector:
 # ```
 persistence:
   claim:
-    enabled: false
+    enabled: true
   name: argo-pvc
   size: 20Gi
   storageClass: csi-driver-lvm-linear
@@ -337,6 +260,7 @@ podAnnotations: {}
 # ```
 podLabels:
   app.kubernetes.io/name: argo
+  app.kubernetes.io/component: primary
 
 ###
 # ```{rubric} Pod Security Context
@@ -456,7 +380,7 @@ securityContext: {}
 # ```
 service:
   enabled: true
-  name: argocd-server
+  name: argo-cd-server
   port: 8080
   targetPort: 8080
   type: LoadBalancer
