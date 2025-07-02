@@ -110,7 +110,6 @@ jobs:
       - name: Install Python dependencies
         run: |
           pipenv install --dev
-          pipenv install -e .
       - name: Build the static site
         run: pipenv run sphinx-build -a -E . deploy
       - name: Upload artifact
