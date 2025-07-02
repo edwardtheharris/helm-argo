@@ -61,7 +61,7 @@ security issues.
 
 Releases are managed independently for each helm chart, and changelogs are
 tracked on each release. Read more about this process
-[here](https://github.com/argoproj/argo-helm/blob/main/CONTRIBUTING.md#changelog).
+[at the argo-cd contribution guide](https://github.com/argoproj/argo-helm/blob/main/CONTRIBUTING.md#changelog).
 
 ## Charts use Helm "Capabilities"
 
