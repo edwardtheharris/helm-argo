@@ -1,4 +1,5 @@
 venv/
+__snapshot__/
 .gnupg/
 *.xml
 .values.yaml

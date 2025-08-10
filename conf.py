@@ -23,7 +23,7 @@ autoyaml_doc_delimiter = "###"
 autoyaml_comment = "#"
 autoyaml_level = 10
 autoyaml_safe_loader = True
-copyright = '2024, Xander Harris'
+copyright = '(c) 2024, Xander Harris. All rights reserved.'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
