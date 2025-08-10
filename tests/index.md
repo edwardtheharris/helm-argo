@@ -18,3 +18,23 @@ This is the index for the API documentation for this chart's unit tests.
 
 ```{autoyaml} /tests/ingress_test.yaml
 ```
+
+## pvc test
+
+```{autoyaml} /tests/pvc_test.yaml
+```
+
+## service test
+
+```{autoyaml} /tests/service_test.yaml
+```
+
+## service account test
+
+```{autoyaml} /tests/serviceaccount_test.yaml
+```
+
+## statefulset test
+
+```{autoyaml} /tests/statefulset_test.yaml
+```

@@ -157,9 +157,9 @@ fullnameOverride: "argo"
 # :start-at: "image:\n"
 # :end-before: "###\n"
 # ```
-# image:
-#   pullPolicy: Always
-#   repository: ghcr.io/edwardtheharris/helm-template-replace-/template-replace-
+image:
+  pullPolicy: Always
+  repository: quay.io/argoproj/argocd
 #   # Overrides the image tag whose default is the chart appVersion.
 #   tag: '0.0.1.rc29'
 #   secret:

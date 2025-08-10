@@ -12,11 +12,7 @@
 # ```
 suite: test for ingress
 release:
-  name: argo-cd
-templates:
-- 'charts/argo-cd/templates/argocd-server/deployment.yaml'
-- 'charts/argo-cd/templates/argocd-configs/argocd-cm.yaml'
-- 'charts/argo-cd/templates/argocd-configs/argocd-cmd-params-cm.yaml'
+  name: argocd
 values:
 - ../values.yaml
 
@@ -35,8 +31,4 @@ tests:
   asserts:
   - isKind:
       of: Ingress
-  - equal:
-      path: metadata.name
-      value: argo-cd-argocd-server
-  documentIndex: 0
-  template: 'charts/argo-cd/templates/argocd-server/deployment.yaml'
+  - matchSnapshot: {}
