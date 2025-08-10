@@ -1,42 +1,15 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
-###
-# ```{rubric} StatefulSet Test Suite
-# ```
-# ---
-# Tests to validate the deployment of the described StatefulSet.
-#
-# ```{literalinclude} /tests/deployment_test.yaml
-# :language: yaml
-# :start-at: "suite: test for deployment\n"
-# :end-before: "###\n"
-# ```
-suite: test for deployment
-release:
-  name: argo-cd
-templates:
-- 'charts/argo-cd/templates/argocd-server/deployment.yaml'
-- 'charts/argo-cd/templates/argocd-configs/argocd-cm.yaml'
-- 'charts/argo-cd/templates/argocd-configs/argocd-cmd-params-cm.yaml'
-values:
-- ../values.yaml
+---
+abstract: API Documentation for the Argo Chart unit tests.
+authors:
+  - name: Xander Harris
+    email: xandertheharris@gmail.com
+date: 2025-08-09
+title: Unit tests for Helm Charts.
+---
 
-###
-# ```{rubric} Deployment Tests
-# ```
-# ---
-# Tests for Deployment Template
-#
-# ```{literalinclude} /tests/deployment_test.yaml
-# :language: yaml
-# :start-at: "tests:\n"
-# ```
-tests:
-- it: should be a Deployment
-  asserts:
-  - isKind:
-      of: Deployment
-  - equal:
-      path: metadata.name
-      value: argo-cd-argocd-server
-  documentIndex: 0
-  template: 'charts/argo-cd/templates/argocd-server/deployment.yaml'
+This is the index for the API documentation for this chart's unit tests.
+
+## hpa
+
+```{autoyaml} /tests/hpa_test.yaml
+```
