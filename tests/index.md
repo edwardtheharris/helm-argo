@@ -9,7 +9,12 @@ title: Unit tests for Helm Charts.
 
 This is the index for the API documentation for this chart's unit tests.
 
-## hpa
+## hpa test
 
 ```{autoyaml} /tests/hpa_test.yaml
+```
+
+## ingress test
+
+```{autoyaml} /tests/ingress_test.yaml
 ```
