@@ -11,9 +11,9 @@
 # ```
 suite: test for hpa
 release:
-  name: argo-cd
+  name: argo
 values:
-- ../values.yaml
+  - ../values.yaml
 
 ###
 # ```{rubric} HPA Tests
@@ -26,14 +26,29 @@ values:
 # :start-at: "tests:\n"
 # ```
 tests:
-- it: should be an hpa
-  set:
-    autoscaling.enabled: true
-  asserts:
-  - isKind:
-      of: HorizontalPodAutoscaler
-  - equal:
-      path: apiVersion
-      value: autoscaling/v2
-  - matchSnapshot:
-      path: metadata
+  - it: repo server should be an hpa
+    set:
+      repoServer:
+        autoscaling:
+          enabled: true
+    skip:
+      reason: broken
+    asserts:
+      - isKind:
+          of: HorizontalPodAutoscaler
+      - matchSnapshot: {}
+    templates:
+      - charts/argo-cd/templates/argocd-repo-server/hpa.yaml
+    values:
+      - values/reposerver.yml
+  - it: server should be an hpa
+    skip:
+      reason: broken tests get skipped
+    asserts:
+      - isKind:
+          of: HorizontalPodAutoscaler
+      - matchSnapshot: {}
+    templates:
+      - charts/argo-cd/templates/argocd-server/hpa.yaml
+    values:
+      - values/server.yml

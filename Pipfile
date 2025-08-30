@@ -6,9 +6,10 @@ name = "pypi"
 [packages]
 loguru = "*"
 gitpython = "*"
-pipenv = "*"
 pip = "*"
 pre-commit = "*"
+pipenv = "*"
+pytest-helm-charts = "*"
 
 [dev-packages]
 "sphinxcontrib.autoyaml" = "*"

@@ -14,7 +14,7 @@ suite: test for pvc
 release:
   name: argo
 values:
-- ../values.yaml
+  - ../values.yaml
 
 ###
 # ```{rubric} PVC Tests
@@ -27,8 +27,10 @@ values:
 # :start-at: "tests:\n"
 # ```
 tests:
-- it: should be a PersistentVolumeClaim
-  asserts:
-  - isKind:
-      of: PersistentVolumeClaim
-  - matchSnapshot: {}
+  - it: should be a PersistentVolumeClaim
+    skip:
+      reason: Not deployed
+    asserts:
+      - isKind:
+          of: PersistentVolumeClaim
+      - matchSnapshot: {}

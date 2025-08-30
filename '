@@ -32,8 +32,6 @@ values:
 # ```
 tests:
   - it: should be a statefulset
-    skip:
-      reason: Fails unclearly
     asserts:
       - isKind:
           of: StatefulSet

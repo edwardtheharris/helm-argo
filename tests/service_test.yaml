@@ -14,10 +14,11 @@ release:
   name: argo
 set:
   service:
-    enabled:
-      true
+    enabled: true
+templates:
+  - charts/argo-cd/templates/redis/service.yaml
 values:
-- ../values.yaml
+  - ../values.yaml
 
 ###
 # ```{rubric} service Tests
@@ -30,8 +31,8 @@ values:
 # :start-at: "tests:\n"
 # ```
 tests:
-- it: should be a service
-  asserts:
-  - isKind:
-      of: Service
-  - matchSnapshot: {}
+  - it: should be a service
+    asserts:
+      - isKind:
+          of: Service
+      - matchSnapshot: {}

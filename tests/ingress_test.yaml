@@ -13,8 +13,33 @@
 suite: test for ingress
 release:
   name: argocd
+set:
+  applicationSet:
+    ingress:
+      enabled: true
+  argo-cd:
+    applicationSet:
+      ingress:
+        enabled: true
+      ingressClassName: nginx
+      hostname: test.svc.cluster
+templates:
+  # - charts/argo-cd/templates/argocd-application-controller/networkpolicy.yaml
+  - charts/argo-cd/templates/argocd-applicationset/ingress.yaml
+  #  - charts/argo-cd/templates/argocd-applicationset/networkpolicy.yaml
+  #  - charts/argo-cd/templates/argocd-notifications/networkpolicy.yaml
+  #  - charts/argo-cd/templates/argocd-repo-server/networkpolicy.yaml
+  #  - charts/argo-cd/templates/argocd-server/aws/ingress.yaml
+  #  - charts/argo-cd/templates/argocd-server/gke/ingress.yaml
+  #  - charts/argo-cd/templates/argocd-server/ingress-grpc.yaml
+  #  - charts/argo-cd/templates/argocd-server/ingress.yaml
+  #  - charts/argo-cd/templates/argocd-server/networkpolicy.yaml
+  # - charts/argo-cd/templates/dex/networkpolicy.yaml
+  # - charts/argo-cd/templates/networkpolicy-default-deny.yaml
+  # - charts/argo-cd/templates/networkpolicy-default-deny.yaml
+  # - charts/argo-cd/templates/redis/networkpolicy.yaml
 values:
-- ../values.yaml
+  - ../values.yaml
 
 ###
 # ```{rubric} Ingress Tests
@@ -27,8 +52,8 @@ values:
 # :start-at: "tests:\n"
 # ```
 tests:
-- it: should be a Ingress
-  asserts:
-  - isKind:
-      of: Ingress
-  - matchSnapshot: {}
+  - it: should be a Ingress
+    asserts:
+      - isKind:
+          of: Ingress
+      - matchSnapshot: {}
