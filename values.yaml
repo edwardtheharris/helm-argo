@@ -19,4 +19,4 @@ server:
     extraHosts:
       - name: argo.brick-house.org
         path: /
-        secretName: brick-house-tls
+        secretName: argo-brick-house-tls

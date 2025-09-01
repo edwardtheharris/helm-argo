@@ -65,7 +65,8 @@ Kubernetes
 
 ## Usage
 
-Typical Helm chart rules.
+Typical Helm chart rules. The
+[readme on the official repository](https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd).
 
 ### Chart
 
