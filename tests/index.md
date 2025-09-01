@@ -1,35 +1,25 @@
 ---
-abstract: Unit tests for helm charts.
+abstract: API Documentation for the Argo Chart unit tests.
 authors:
-    - name: Xander Harris
-      email: xandertheharris@gamil.com
-date: 2024-08-04
-title: Unit Tests
+  - name: Xander Harris
+    email: xandertheharris@gmail.com
+date: 2025-08-09
+title: Unit tests for Helm Charts.
 ---
 
-## Usage
+This is the index for the API documentation for this chart's unit tests.
 
-1. Install the [helm unittest] plugin.
+## ingress test
 
-   ```{code-block} shell
-   :caption: install
+```{autoyaml} /tests/ingress_test.yaml
+```
 
-   helm plugin install https://github.com/helm-unittest/helm-unittest
-   ```
+## service test
 
-2. Run the tests.
+```{autoyaml} /tests/service_test.yaml
+```
 
-   ```{code-block} shell
-   :caption: test
+## service account test
 
-   helm unittest -f 'tests/*.yaml' .
-   ```
-
-## Test Suites
-
-This provides the following suites.
-
-### StatefulSet Suite
-
-```{autoyaml} tests/deployment_test.yaml
+```{autoyaml} /tests/serviceaccount_test.yaml
 ```

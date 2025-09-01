@@ -1,4 +1,5 @@
 venv/
+__snapshot__/
 .gnupg/
 *.xml
 .values.yaml
@@ -9,3 +10,4 @@ reflog
 *.tgz
 secrets
 certs/
+.debug/
