@@ -4,8 +4,7 @@ on:
     branches:
       - main
   push:
-    branches:
-      - main
+    branches: []
   workflow_dispatch: {}
 
 ###
@@ -64,7 +63,7 @@ jobs:
   # ```{literalinclude} /.github/workflows/helm.yml
   # :language: yaml
   # :start-at: "  helmlint:\n"
-  # :end-before: "###\n"
+  # :end-before: "####\n"
   # ```
   helmlint:
     name: helmlint
@@ -73,6 +72,7 @@ jobs:
     steps:
       - uses: actions/checkout@main
       - run: helm lint .
+  ####
 
   ###
   # ```{rubric} Helm Test
