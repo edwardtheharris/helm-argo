@@ -18,7 +18,6 @@ title: ArgoCD Helm Chart
 ```{toctree}
 :caption: contents
 
-monero/index
 tests/index
 charts/argo-cd/index
 ```
