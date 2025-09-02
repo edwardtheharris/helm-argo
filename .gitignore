@@ -1,4 +1,5 @@
 venv/
+.debug
 __snapshot__/
 .gnupg/
 *.xml
