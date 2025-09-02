@@ -1,6 +1,7 @@
 venv/
-__snapshot__/
 .gnupg/
+.debug
+__snapshot__/
 *.xml
 .values.yaml
 .vscode/
@@ -10,4 +11,3 @@ reflog
 *.tgz
 secrets
 certs/
-.debug/
