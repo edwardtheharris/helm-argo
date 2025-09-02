@@ -18,7 +18,6 @@ title: ArgoCD Helm Chart
 ```{toctree}
 :caption: contents
 
-monero/index
 tests/index
 charts/argo-cd/index
 ```
@@ -65,7 +64,8 @@ Kubernetes
 
 ## Usage
 
-Typical Helm chart rules.
+Typical Helm chart rules. The
+[readme on the official repository](https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd).
 
 ### Chart
 

@@ -11,3 +11,4 @@ reflog
 *.tgz
 secrets
 certs/
+.debug/

@@ -9,19 +9,9 @@ title: Unit tests for Helm Charts.
 
 This is the index for the API documentation for this chart's unit tests.
 
-## hpa test
-
-```{autoyaml} /tests/hpa_test.yaml
-```
-
 ## ingress test
 
 ```{autoyaml} /tests/ingress_test.yaml
-```
-
-## pvc test
-
-```{autoyaml} /tests/pvc_test.yaml
 ```
 
 ## service test
@@ -32,9 +22,4 @@ This is the index for the API documentation for this chart's unit tests.
 ## service account test
 
 ```{autoyaml} /tests/serviceaccount_test.yaml
-```
-
-## statefulset test
-
-```{autoyaml} /tests/statefulset_test.yaml
 ```
