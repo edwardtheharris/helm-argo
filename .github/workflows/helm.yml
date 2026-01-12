@@ -108,25 +108,24 @@ jobs:
     steps:
       - uses: actions/checkout@main
       - run: helm plugin install https://github.com/helm-unittest/helm-unittest
-      - run: helm repo add lvm https://helm.metal-stack.io
       - run: |
-          for i in lvm; do
+          for i in .; do
             cd $i
             helm dependency update
             cd ..
           done
       - run: |
-          for i in lvm; do
+          for i in .; do
             cd $i
             helm dependency build
             cd ..
           done
       - run: |
-          for i in lvm; do
+          for i in .; do
             helm unittest -d -f "$i/tests/*.yaml" $i
           done
       - run: |
-          for i in lvm; do
+          for i in .; do
             helm unittest -f "$i/tests/*.yaml" -t JUnit -o $i.results.xml $i
             cat $i.results.xml >> results.xml
           done
