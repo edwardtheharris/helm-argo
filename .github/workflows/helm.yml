@@ -87,7 +87,7 @@ jobs:
     steps:
       - uses: actions/checkout@main
       - run: |
-          for i in lvm; do
+          for i in .; do
             helm lint $i
           done
   ####
