@@ -5,26 +5,23 @@ metadata:
     metallb.io/ip-allocated-from-pool: the-hard-way
   labels:
     app.kubernetes.io/component: server
-    app.kubernetes.io/name: argocd-server
+    app.kubernetes.io/name: {{ .Release.Name }}
     app.kubernetes.io/part-of: argocd
-  name: argocd-server
-  namespace: argocd
+  name: {{ .Release.Name }}
 spec:
   allocateLoadBalancerNodePorts: true
   externalTrafficPolicy: Cluster
   internalTrafficPolicy: Cluster
   ports:
     - name: http
-      nodePort: 30307
       port: 80
       protocol: TCP
       targetPort: 8080
     - name: https
-      nodePort: 31241
       port: 443
       protocol: TCP
       targetPort: 8080
   selector:
-    app.kubernetes.io/name: argocd-server
+    app.kubernetes.io/name: {{ .Release.Name }}
   sessionAffinity: None
   type: LoadBalancer
