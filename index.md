@@ -19,7 +19,6 @@ title: ArgoCD Helm Chart
 :caption: contents
 
 tests/index
-charts/argo-cd/index
 ```
 
 ```{toctree}
