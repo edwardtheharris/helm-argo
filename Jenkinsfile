@@ -105,12 +105,23 @@ stage("helm unittests") {
     }
   }
 }
-stage("docker build and push") {
-  dockerNode('docker') {
-    withDockerContainer('ghcr.io/edwardtheharris/helm-jenkins:docker:0.0.2-00') {
+stage("deploy the hard way") {
+  podTemplate(agentContainer: 'helm', cloud: 'the-hard-way',
+              containers: [
+              containerTemplate(alwaysPullImage: true, command: '/usr/local/bin/jenkins-agent',
+                      image: 'ghcr.io/edwardtheharris/helm-jenkins/helm:0.0.2-01', livenessProbe: containerLivenessProbe(execArgs: '',
+                      failureThreshold: 0, initialDelaySeconds: 0, periodSeconds: 0,
+                      successThreshold: 0, timeoutSeconds: 0),
+              name: 'helm', resourceLimitCpu: '', resourceLimitEphemeralStorage: '', resourceLimitMemory: '',
+              resourceRequestCpu: '', resourceRequestEphemeralStorage: '',
+              resourceRequestMemory: '', ttyEnabled: true,
+              workingDir: '/home/jenkins/agent')], label: 'helm',
+              name: 'helm', namespace: 'jenkins') {
+    node("${env.POD_LABEL}") {
       ansiColor('xterm') {
-
-        sh("docker ps")    // some block
+        checkout scm
+        echo("Deploy the hard way.")
+        sh("docker ps")    
       }
     }
 
