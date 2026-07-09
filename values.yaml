@@ -3,7 +3,7 @@
 ##
 
 # -- Provide a name in place of `argocd`
-nameOverride: argocd
+nameOverride: argo-cd
 # -- String to fully override `"argo-cd.fullname"`
 fullnameOverride: ""
 # -- Override the namespace
@@ -15,6 +15,16 @@ kubeVersionOverride: ""
 # If you want to template helm charts but cannot access k8s API server
 # you can set api versions here
 apiVersionOverrides: {}
+
+service:
+  port: 80
+serviceAccount:
+  create: true
+  name: argo
+persistence:
+  storageClass: csi-lvm-linear
+autoscaling:
+  enabled: false
 
 # -- Create aggregated roles that extend existing cluster roles to interact with argo-cd resources
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
@@ -719,7 +729,7 @@ configs:
   # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/#sensitive-data-and-sso-client-secrets
   secret:
     # -- Create the argocd-secret
-    createSecret: true
+    createSecret: false
     # -- Labels to be added to argocd-secret
     labels: {}
     # -- Annotations to be added to argocd-secret
@@ -1044,17 +1054,17 @@ controller:
   ## Application controller metrics configuration
   metrics:
     # -- Deploy metrics service
-    enabled: false
+    enabled: true
     # -- Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used.
     scrapeTimeout: ""
     applicationLabels:
       # -- Enables additional labels in argocd_app_labels metric
-      enabled: false
+      enabled: true
       # -- Additional labels
       labels: []
     service:
       # -- Metrics service type
-      type: ClusterIP
+      type: LoadBalancer
       # -- Metrics service clusterIP. `None` makes a "headless service" (no virtual IP)
       clusterIP: ""
       # -- Metrics service annotations
@@ -1067,7 +1077,7 @@ controller:
       portName: http-metrics
     serviceMonitor:
       # -- Enable a prometheus ServiceMonitor
-      enabled: false
+      enabled: true
       # -- Prometheus ServiceMonitor interval
       interval: 30s
       # -- When true, honorLabels preserves the metric’s labels when they collide with the target’s labels.
@@ -1466,320 +1476,320 @@ dex:
 ## Redis
 redis:
   # -- Enable redis
-  enabled: true
+  enabled: false
   # -- Redis name
-  name: redis
+  # name: redis
 
-  # -- Runtime class name for redis
-  # @default -- `""` (defaults to global.runtimeClassName)
-  runtimeClassName: ""
+  # # -- Runtime class name for redis
+  # # @default -- `""` (defaults to global.runtimeClassName)
+  # runtimeClassName: ""
 
-  ## Redis Pod Disruption Budget
-  ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
-  pdb:
-    # -- Deploy a [PodDisruptionBudget] for the Redis
-    enabled: false
-    # -- Labels to be added to Redis pdb
-    labels: {}
-    # -- Annotations to be added to Redis pdb
-    annotations: {}
-    # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
-    # @default -- `""` (defaults to 0 if not specified)
-    minAvailable: ""
-    # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
-    ## Has higher precedence over `redis.pdb.minAvailable`
-    maxUnavailable: ""
+  # ## Redis Pod Disruption Budget
+  # ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+  # pdb:
+  #   # -- Deploy a [PodDisruptionBudget] for the Redis
+  #   enabled: false
+  #   # -- Labels to be added to Redis pdb
+  #   labels: {}
+  #   # -- Annotations to be added to Redis pdb
+  #   annotations: {}
+  #   # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
+  #   # @default -- `""` (defaults to 0 if not specified)
+  #   minAvailable: ""
+  #   # -- Number of pods that are unavailble after eviction as number or percentage (eg.: 50%).
+  #   ## Has higher precedence over `redis.pdb.minAvailable`
+  #   maxUnavailable: ""
 
-  ## Redis image
-  image:
-    # -- Redis repository
-    repository: ecr-public.aws.com/docker/library/redis
-    # -- Redis tag
-    ## Do not upgrade to >= 7.4.0, otherwise you are no longer using an open source version of Redis
-    tag: 7.2.8-alpine
-    # -- Redis image pull policy
-    # @default -- `""` (defaults to global.image.imagePullPolicy)
-    imagePullPolicy: ""
+  # ## Redis image
+  # image:
+  #   # -- Redis repository
+  #   repository: ecr-public.aws.com/docker/library/redis
+  #   # -- Redis tag
+  #   ## Do not upgrade to >= 7.4.0, otherwise you are no longer using an open source version of Redis
+  #   tag: 7.2.8-alpine
+  #   # -- Redis image pull policy
+  #   # @default -- `""` (defaults to global.image.imagePullPolicy)
+  #   imagePullPolicy: ""
 
-  ## Prometheus redis-exporter sidecar
-  exporter:
-    # -- Enable Prometheus redis-exporter sidecar
-    enabled: false
-    # -- Environment variables to pass to the Redis exporter
-    env: []
-    ## Prometheus redis-exporter image
-    image:
-      # -- Repository to use for the redis-exporter
-      repository: ghcr.io/oliver006/redis_exporter
-      # -- Tag to use for the redis-exporter
-      tag: v1.77.0
-      # -- Image pull policy for the redis-exporter
-      # @default -- `""` (defaults to global.image.imagePullPolicy)
-      imagePullPolicy: ""
+  # ## Prometheus redis-exporter sidecar
+  # exporter:
+  #   # -- Enable Prometheus redis-exporter sidecar
+  #   enabled: false
+  #   # -- Environment variables to pass to the Redis exporter
+  #   env: []
+  #   ## Prometheus redis-exporter image
+  #   image:
+  #     # -- Repository to use for the redis-exporter
+  #     repository: ghcr.io/oliver006/redis_exporter
+  #     # -- Tag to use for the redis-exporter
+  #     tag: v1.77.0
+  #     # -- Image pull policy for the redis-exporter
+  #     # @default -- `""` (defaults to global.image.imagePullPolicy)
+  #     imagePullPolicy: ""
 
-    # -- Redis exporter security context
-    # @default -- See [values.yaml]
-    containerSecurityContext:
-      runAsNonRoot: true
-      readOnlyRootFilesystem: true
-      allowPrivilegeEscalation: false
-      seccompProfile:
-        type: RuntimeDefault
-      capabilities:
-        drop:
-          - ALL
+  #   # -- Redis exporter security context
+  #   # @default -- See [values.yaml]
+  #   containerSecurityContext:
+  #     runAsNonRoot: true
+  #     readOnlyRootFilesystem: true
+  #     allowPrivilegeEscalation: false
+  #     seccompProfile:
+  #       type: RuntimeDefault
+  #     capabilities:
+  #       drop:
+  #         - ALL
 
-    ## Probes for Redis exporter (optional)
-    ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
-    readinessProbe:
-      # -- Enable Kubernetes liveness probe for Redis exporter (optional)
-      enabled: false
-      # -- Number of seconds after the container has started before [probe] is initiated
-      initialDelaySeconds: 30
-      # -- How often (in seconds) to perform the [probe]
-      periodSeconds: 15
-      # -- Number of seconds after which the [probe] times out
-      timeoutSeconds: 15
-      # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
-      successThreshold: 1
-      # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
-      failureThreshold: 5
-    livenessProbe:
-      # -- Enable Kubernetes liveness probe for Redis exporter
-      enabled: false
-      # -- Number of seconds after the container has started before [probe] is initiated
-      initialDelaySeconds: 30
-      # -- How often (in seconds) to perform the [probe]
-      periodSeconds: 15
-      # -- Number of seconds after which the [probe] times out
-      timeoutSeconds: 15
-      # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
-      successThreshold: 1
-      # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
-      failureThreshold: 5
+  #   ## Probes for Redis exporter (optional)
+  #   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  #   readinessProbe:
+  #     # -- Enable Kubernetes liveness probe for Redis exporter (optional)
+  #     enabled: false
+  #     # -- Number of seconds after the container has started before [probe] is initiated
+  #     initialDelaySeconds: 30
+  #     # -- How often (in seconds) to perform the [probe]
+  #     periodSeconds: 15
+  #     # -- Number of seconds after which the [probe] times out
+  #     timeoutSeconds: 15
+  #     # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+  #     successThreshold: 1
+  #     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+  #     failureThreshold: 5
+  #   livenessProbe:
+  #     # -- Enable Kubernetes liveness probe for Redis exporter
+  #     enabled: false
+  #     # -- Number of seconds after the container has started before [probe] is initiated
+  #     initialDelaySeconds: 30
+  #     # -- How often (in seconds) to perform the [probe]
+  #     periodSeconds: 15
+  #     # -- Number of seconds after which the [probe] times out
+  #     timeoutSeconds: 15
+  #     # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+  #     successThreshold: 1
+  #     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+  #     failureThreshold: 5
 
-    # -- Resource limits and requests for redis-exporter sidecar
-    resources: {}
-      # limits:
-      #   cpu: 50m
-      #   memory: 64Mi
-      # requests:
-      #   cpu: 10m
-      #   memory: 32Mi
+  #   # -- Resource limits and requests for redis-exporter sidecar
+  #   resources: {}
+  #     # limits:
+  #     #   cpu: 50m
+  #     #   memory: 64Mi
+  #     # requests:
+  #     #   cpu: 10m
+  #     #   memory: 32Mi
 
-  # -- Secrets with credentials to pull images from a private registry
-  # @default -- `[]` (defaults to global.imagePullSecrets)
-  imagePullSecrets: []
+  # # -- Secrets with credentials to pull images from a private registry
+  # # @default -- `[]` (defaults to global.imagePullSecrets)
+  # imagePullSecrets: []
 
-  # -- Additional command line arguments to pass to redis-server
-  extraArgs: []
-  # - --bind
-  # - "0.0.0.0"
+  # # -- Additional command line arguments to pass to redis-server
+  # extraArgs: []
+  # # - --bind
+  # # - "0.0.0.0"
 
-  # -- Environment variables to pass to the Redis server
-  env: []
+  # # -- Environment variables to pass to the Redis server
+  # env: []
 
-  # -- envFrom to pass to the Redis server
-  # @default -- `[]` (See [values.yaml])
-  envFrom: []
-  # - configMapRef:
-  #     name: config-map-name
-  # - secretRef:
-  #     name: secret-name
+  # # -- envFrom to pass to the Redis server
+  # # @default -- `[]` (See [values.yaml])
+  # envFrom: []
+  # # - configMapRef:
+  # #     name: config-map-name
+  # # - secretRef:
+  # #     name: secret-name
 
-  ## Probes for Redis server (optional)
-  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
-  readinessProbe:
-    # -- Enable Kubernetes liveness probe for Redis server
-    enabled: false
-    # -- Number of seconds after the container has started before [probe] is initiated
-    initialDelaySeconds: 30
-    # -- How often (in seconds) to perform the [probe]
-    periodSeconds: 15
-    # -- Number of seconds after which the [probe] times out
-    timeoutSeconds: 15
-    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
-    successThreshold: 1
-    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
-    failureThreshold: 5
-  livenessProbe:
-    # -- Enable Kubernetes liveness probe for Redis server
-    enabled: false
-    # -- Number of seconds after the container has started before [probe] is initiated
-    initialDelaySeconds: 30
-    # -- How often (in seconds) to perform the [probe]
-    periodSeconds: 15
-    # -- Number of seconds after which the [probe] times out
-    timeoutSeconds: 15
-    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
-    successThreshold: 1
-    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
-    failureThreshold: 5
+  # ## Probes for Redis server (optional)
+  # ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  # readinessProbe:
+  #   # -- Enable Kubernetes liveness probe for Redis server
+  #   enabled: false
+  #   # -- Number of seconds after the container has started before [probe] is initiated
+  #   initialDelaySeconds: 30
+  #   # -- How often (in seconds) to perform the [probe]
+  #   periodSeconds: 15
+  #   # -- Number of seconds after which the [probe] times out
+  #   timeoutSeconds: 15
+  #   # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+  #   successThreshold: 1
+  #   # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+  #   failureThreshold: 5
+  # livenessProbe:
+  #   # -- Enable Kubernetes liveness probe for Redis server
+  #   enabled: false
+  #   # -- Number of seconds after the container has started before [probe] is initiated
+  #   initialDelaySeconds: 30
+  #   # -- How often (in seconds) to perform the [probe]
+  #   periodSeconds: 15
+  #   # -- Number of seconds after which the [probe] times out
+  #   timeoutSeconds: 15
+  #   # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+  #   successThreshold: 1
+  #   # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+  #   failureThreshold: 5
 
-  # -- Additional containers to be added to the redis pod
-  ## Note: Supports use of custom Helm templates
-  extraContainers: []
+  # # -- Additional containers to be added to the redis pod
+  # ## Note: Supports use of custom Helm templates
+  # extraContainers: []
 
-  # -- Init containers to add to the redis pod
-  ## Note: Supports use of custom Helm templates
-  initContainers: []
+  # # -- Init containers to add to the redis pod
+  # ## Note: Supports use of custom Helm templates
+  # initContainers: []
 
-  # -- Additional volumeMounts to the redis container
-  volumeMounts: []
+  # # -- Additional volumeMounts to the redis container
+  # volumeMounts: []
 
-  # -- Additional volumes to the redis pod
-  volumes: []
+  # # -- Additional volumes to the redis pod
+  # volumes: []
 
-  # -- Annotations to be added to the Redis server Deployment
-  deploymentAnnotations: {}
+  # # -- Annotations to be added to the Redis server Deployment
+  # deploymentAnnotations: {}
 
-  # -- Labels for the Redis server Deployment
-  deploymentLabels: {}
+  # # -- Labels for the Redis server Deployment
+  # deploymentLabels: {}
 
-  # -- Annotations to be added to the Redis server pods
-  podAnnotations: {}
+  # # -- Annotations to be added to the Redis server pods
+  # podAnnotations: {}
 
-  # -- Labels to be added to the Redis server pods
-  podLabels: {}
+  # # -- Labels to be added to the Redis server pods
+  # podLabels: {}
 
-  # -- Resource limits and requests for redis
-  resources: {}
-  #  limits:
-  #    cpu: 200m
-  #    memory: 128Mi
-  #  requests:
-  #    cpu: 100m
-  #    memory: 64Mi
+  # # -- Resource limits and requests for redis
+  # resources: {}
+  # #  limits:
+  # #    cpu: 200m
+  # #    memory: 128Mi
+  # #  requests:
+  # #    cpu: 100m
+  # #    memory: 64Mi
 
-  # -- Redis pod-level security context
-  # @default -- See [values.yaml]
-  securityContext:
-    runAsNonRoot: true
-    runAsUser: 999
-    seccompProfile:
-      type: RuntimeDefault
+  # # -- Redis pod-level security context
+  # # @default -- See [values.yaml]
+  # securityContext:
+  #   runAsNonRoot: true
+  #   runAsUser: 999
+  #   seccompProfile:
+  #     type: RuntimeDefault
 
-  # Redis container ports
-  containerPorts:
-    # -- Redis container port
-    redis: 6379
-    # -- Metrics container port
-    metrics: 9121
+  # # Redis container ports
+  # containerPorts:
+  #   # -- Redis container port
+  #   redis: 6379
+  #   # -- Metrics container port
+  #   metrics: 9121
 
-  # -- [DNS configuration]
-  dnsConfig: {}
-  # -- Alternative DNS policy for Redis server pods
-  dnsPolicy: "ClusterFirst"
+  # # -- [DNS configuration]
+  # dnsConfig: {}
+  # # -- Alternative DNS policy for Redis server pods
+  # dnsPolicy: "ClusterFirst"
 
-  # -- Redis container-level security context
-  # @default -- See [values.yaml]
-  containerSecurityContext:
-    readOnlyRootFilesystem: true
-    allowPrivilegeEscalation: false
-    capabilities:
-      drop:
-        - ALL
+  # # -- Redis container-level security context
+  # # @default -- See [values.yaml]
+  # containerSecurityContext:
+  #   readOnlyRootFilesystem: true
+  #   allowPrivilegeEscalation: false
+  #   capabilities:
+  #     drop:
+  #       - ALL
 
-  # -- Redis service port
-  servicePort: 6379
+  # # -- Redis service port
+  # servicePort: 6379
 
-  # -- Priority class for redis pods
-  # @default -- `""` (defaults to global.priorityClassName)
-  priorityClassName: ""
+  # # -- Priority class for redis pods
+  # # @default -- `""` (defaults to global.priorityClassName)
+  # priorityClassName: ""
 
-  # -- [Node selector]
-  # @default -- `{}` (defaults to global.nodeSelector)
-  nodeSelector: {}
+  # # -- [Node selector]
+  # # @default -- `{}` (defaults to global.nodeSelector)
+  # nodeSelector: {}
 
-  # -- [Tolerations] for use with node taints
-  # @default -- `[]` (defaults to global.tolerations)
-  tolerations: []
+  # # -- [Tolerations] for use with node taints
+  # # @default -- `[]` (defaults to global.tolerations)
+  # tolerations: []
 
-  # -- Assign custom [affinity] rules to the deployment
-  # @default -- `{}` (defaults to global.affinity preset)
-  affinity: {}
+  # # -- Assign custom [affinity] rules to the deployment
+  # # @default -- `{}` (defaults to global.affinity preset)
+  # affinity: {}
 
-  # -- Assign custom [TopologySpreadConstraints] rules to redis
-  # @default -- `[]` (defaults to global.topologySpreadConstraints)
-  ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
-  ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
-  topologySpreadConstraints: []
-    # - maxSkew: 1
-    #   topologyKey: topology.kubernetes.io/zone
-    #   whenUnsatisfiable: DoNotSchedule
+  # # -- Assign custom [TopologySpreadConstraints] rules to redis
+  # # @default -- `[]` (defaults to global.topologySpreadConstraints)
+  # ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
+  # ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  # topologySpreadConstraints: []
+  #   # - maxSkew: 1
+  #   #   topologyKey: topology.kubernetes.io/zone
+  #   #   whenUnsatisfiable: DoNotSchedule
 
-  # -- terminationGracePeriodSeconds for container lifecycle hook
-  terminationGracePeriodSeconds: 30
+  # # -- terminationGracePeriodSeconds for container lifecycle hook
+  # terminationGracePeriodSeconds: 30
 
-  # -- Automount API credentials for the Service Account into the pod.
-  automountServiceAccountToken: true
+  # # -- Automount API credentials for the Service Account into the pod.
+  # automountServiceAccountToken: true
 
-  serviceAccount:
-    # -- Create a service account for the redis pod
-    create: false
-    # -- Service account name for redis pod
-    name: ""
-    # -- Annotations applied to created service account
-    annotations: {}
-    # -- Automount API credentials for the Service Account
-    automountServiceAccountToken: false
+  # serviceAccount:
+  #   # -- Create a service account for the redis pod
+  #   create: false
+  #   # -- Service account name for redis pod
+  #   name: ""
+  #   # -- Annotations applied to created service account
+  #   annotations: {}
+  #   # -- Automount API credentials for the Service Account
+  #   automountServiceAccountToken: false
 
-  service:
-    # -- Redis service annotations
-    annotations: {}
-    # -- Additional redis service labels
-    labels: {}
+  # service:
+  #   # -- Redis service annotations
+  #   annotations: {}
+  #   # -- Additional redis service labels
+  #   labels: {}
 
-  metrics:
-    # -- Deploy metrics service
-    enabled: false
+  # metrics:
+  #   # -- Deploy metrics service
+  #   enabled: false
 
-    # Redis metrics service configuration
-    service:
-      # -- Metrics service type
-      type: ClusterIP
-      # -- Metrics service clusterIP. `None` makes a "headless service" (no virtual IP)
-      clusterIP: None
-      # -- Metrics service annotations
-      annotations: {}
-      # -- Metrics service labels
-      labels: {}
-      # -- Metrics service port
-      servicePort: 9121
-      # -- Metrics service port name
-      portName: http-metrics
+  #   # Redis metrics service configuration
+  #   service:
+  #     # -- Metrics service type
+  #     type: ClusterIP
+  #     # -- Metrics service clusterIP. `None` makes a "headless service" (no virtual IP)
+  #     clusterIP: None
+  #     # -- Metrics service annotations
+  #     annotations: {}
+  #     # -- Metrics service labels
+  #     labels: {}
+  #     # -- Metrics service port
+  #     servicePort: 9121
+  #     # -- Metrics service port name
+  #     portName: http-metrics
 
-    serviceMonitor:
-      # -- Enable a prometheus ServiceMonitor
-      enabled: false
-      # -- Interval at which metrics should be scraped
-      interval: 30s
-      # -- When true, honorLabels preserves the metric’s labels when they collide with the target’s labels.
-      honorLabels: false
-      # -- Prometheus [RelabelConfigs] to apply to samples before scraping
-      relabelings: []
-      # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
-      metricRelabelings: []
-      # -- Prometheus ServiceMonitor selector
-      selector: {}
-        # prometheus: kube-prometheus
+  #   serviceMonitor:
+  #     # -- Enable a prometheus ServiceMonitor
+  #     enabled: false
+  #     # -- Interval at which metrics should be scraped
+  #     interval: 30s
+  #     # -- When true, honorLabels preserves the metric’s labels when they collide with the target’s labels.
+  #     honorLabels: false
+  #     # -- Prometheus [RelabelConfigs] to apply to samples before scraping
+  #     relabelings: []
+  #     # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
+  #     metricRelabelings: []
+  #     # -- Prometheus ServiceMonitor selector
+  #     selector: {}
+  #       # prometheus: kube-prometheus
 
-      # -- Prometheus ServiceMonitor scheme
-      scheme: ""
-      # -- Prometheus ServiceMonitor tlsConfig
-      tlsConfig: {}
-      # -- Prometheus ServiceMonitor namespace
-      namespace: "" # "monitoring"
-      # -- Prometheus ServiceMonitor labels
-      additionalLabels: {}
-      # -- Prometheus ServiceMonitor annotations
-      annotations: {}
+  #     # -- Prometheus ServiceMonitor scheme
+  #     scheme: ""
+  #     # -- Prometheus ServiceMonitor tlsConfig
+  #     tlsConfig: {}
+  #     # -- Prometheus ServiceMonitor namespace
+  #     namespace: "" # "monitoring"
+  #     # -- Prometheus ServiceMonitor labels
+  #     additionalLabels: {}
+  #     # -- Prometheus ServiceMonitor annotations
+  #     annotations: {}
 
-  # Default redis's network policy
-  networkPolicy:
-    # -- Default network policy rules used by redis
-    # @default -- `false` (defaults to global.networkPolicy.create)
-    create: false
+  # # Default redis's network policy
+  # networkPolicy:
+  #   # -- Default network policy rules used by redis
+  #   # @default -- `false` (defaults to global.networkPolicy.create)
+  #   create: false
 
 ## Redis-HA subchart replaces custom redis deployment when `redis-ha.enabled=true`
 # Ref: https://github.com/DandyDeveloper/charts/blob/master/charts/redis-ha/values.yaml
@@ -1787,101 +1797,101 @@ redis-ha:
   # -- Enables the Redis HA subchart and disables the custom Redis single node deployment
   enabled: false
   ## Redis image
-  image:
-    # -- Redis repository
-    repository: ecr-public.aws.com/docker/library/redis
-    # -- Redis tag
-    ## Do not upgrade to >= 7.4.0, otherwise you are no longer using an open source version of Redis
-    tag: 7.2.8-alpine
-  ## Prometheus redis-exporter sidecar
-  exporter:
-    # -- Enable Prometheus redis-exporter sidecar
-    enabled: false
-    # -- Repository to use for the redis-exporter
-    image: ghcr.io/oliver006/redis_exporter
-    # -- Tag to use for the redis-exporter
-    tag: v1.75.0
-  persistentVolume:
-    # -- Configures persistence on Redis nodes
-    enabled: false
-  ## Redis specific configuration options
-  redis:
-    # -- Redis convention for naming the cluster group: must match `^[\\w-\\.]+$` and can be templated
-    masterGroupName: argocd
-    # -- Any valid redis config options in this section will be applied to each server (see `redis-ha` chart)
-    # @default -- See [values.yaml]
-    config:
-      # -- Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled
-      # @default -- `'""'`
-      save: '""'
-  ## Enables a HA Proxy for better LoadBalancing / Sentinel Master support. Automatically proxies to Redis master.
-  haproxy:
-    # -- Enabled HAProxy LoadBalancing/Proxy
-    enabled: true
-    # --  Custom labels for the haproxy pod. This is relevant for Argo CD CLI.
-    labels:
-      app.kubernetes.io/name: argocd-redis-ha-haproxy
-    image:
-      # -- HAProxy Image Repository
-      repository: ecr-public.aws.com/docker/library/haproxy
-    metrics:
-      # -- HAProxy enable prometheus metric scraping
-      enabled: true
-    # -- Whether the haproxy pods should be forced to run on separate nodes.
-    hardAntiAffinity: true
-    # -- Additional affinities to add to the haproxy pods.
-    additionalAffinities: {}
-    # -- Assign custom [affinity] rules to the haproxy pods.
-    affinity: |
+  # image:
+  #   # -- Redis repository
+  #   repository: ecr-public.aws.com/docker/library/redis
+  #   # -- Redis tag
+  #   ## Do not upgrade to >= 7.4.0, otherwise you are no longer using an open source version of Redis
+  #   tag: 7.2.8-alpine
+  # ## Prometheus redis-exporter sidecar
+  # exporter:
+  #   # -- Enable Prometheus redis-exporter sidecar
+  #   enabled: false
+  #   # -- Repository to use for the redis-exporter
+  #   image: ghcr.io/oliver006/redis_exporter
+  #   # -- Tag to use for the redis-exporter
+  #   tag: v1.75.0
+  # persistentVolume:
+  #   # -- Configures persistence on Redis nodes
+  #   enabled: false
+  # ## Redis specific configuration options
+  # redis:
+  #   # -- Redis convention for naming the cluster group: must match `^[\\w-\\.]+$` and can be templated
+  #   masterGroupName: argocd
+  #   # -- Any valid redis config options in this section will be applied to each server (see `redis-ha` chart)
+  #   # @default -- See [values.yaml]
+  #   config:
+  #     # -- Will save the DB if both the given number of seconds and the given number of write operations against the DB occurred. `""`  is disabled
+  #     # @default -- `'""'`
+  #     save: '""'
+  # ## Enables a HA Proxy for better LoadBalancing / Sentinel Master support. Automatically proxies to Redis master.
+  # haproxy: {}
+  #   # -- Enabled HAProxy LoadBalancing/Proxy
+  #   enabled: true
+  #   # --  Custom labels for the haproxy pod. This is relevant for Argo CD CLI.
+  #   labels:
+  #     app.kubernetes.io/name: argocd-redis-ha-haproxy
+  #   image:
+  #     # -- HAProxy Image Repository
+  #     repository: ecr-public.aws.com/docker/library/haproxy
+  #   metrics:
+  #     # -- HAProxy enable prometheus metric scraping
+  #     enabled: true
+  #   # -- Whether the haproxy pods should be forced to run on separate nodes.
+  #   hardAntiAffinity: true
+  #   # -- Additional affinities to add to the haproxy pods.
+  #   additionalAffinities: {}
+  #   # -- Assign custom [affinity] rules to the haproxy pods.
+  #   affinity: |
 
-    # -- [Tolerations] for use with node taints for haproxy pods.
-    tolerations: []
-    # -- HAProxy container-level security context
-    # @default -- See [values.yaml]
-    containerSecurityContext:
-      readOnlyRootFilesystem: true
+  #   # -- [Tolerations] for use with node taints for haproxy pods.
+  #   tolerations: []
+  #   # -- HAProxy container-level security context
+  #   # @default -- See [values.yaml]
+  #   containerSecurityContext:
+  #     readOnlyRootFilesystem: true
 
-  # -- Configures redis-ha with AUTH
-  auth: true
-  # -- Existing Secret to use for redis-ha authentication.
-  # By default the redis-secret-init Job is generating this Secret.
-  existingSecret: argocd-redis
+  # # -- Configures redis-ha with AUTH
+  # auth: true
+  # # -- Existing Secret to use for redis-ha authentication.
+  # # By default the redis-secret-init Job is generating this Secret.
+  # existingSecret: argocd-redis
 
-  # -- Whether the Redis server pods should be forced to run on separate nodes.
-  hardAntiAffinity: true
+  # # -- Whether the Redis server pods should be forced to run on separate nodes.
+  # hardAntiAffinity: true
 
-  # -- Additional affinities to add to the Redis server pods.
-  additionalAffinities: {}
+  # # -- Additional affinities to add to the Redis server pods.
+  # additionalAffinities: {}
 
-  # -- Assign custom [affinity] rules to the Redis pods.
-  affinity: |
+  # # -- Assign custom [affinity] rules to the Redis pods.
+  # affinity: |
 
-  # -- [Tolerations] for use with node taints for Redis pods.
-  tolerations: []
+  # # -- [Tolerations] for use with node taints for Redis pods.
+  # tolerations: []
 
-  # -- Assign custom [TopologySpreadConstraints] rules to the Redis pods.
-  ## https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
-  topologySpreadConstraints:
-    # -- Enable Redis HA topology spread constraints
-    enabled: false
-    # -- Max skew of pods tolerated
-    # @default -- `""` (defaults to `1`)
-    maxSkew: ""
-    # -- Topology key for spread
-    # @default -- `""` (defaults to `topology.kubernetes.io/zone`)
-    topologyKey: ""
-    # -- Enforcement policy, hard or soft
-    # @default -- `""` (defaults to `ScheduleAnyway`)
-    whenUnsatisfiable: ""
-  # -- Redis HA statefulset container-level security context
-  # @default -- See [values.yaml]
-  containerSecurityContext:
-    readOnlyRootFilesystem: true
+  # # -- Assign custom [TopologySpreadConstraints] rules to the Redis pods.
+  # ## https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
+  # topologySpreadConstraints:
+  #   # -- Enable Redis HA topology spread constraints
+  #   enabled: false
+  #   # -- Max skew of pods tolerated
+  #   # @default -- `""` (defaults to `1`)
+  #   maxSkew: ""
+  #   # -- Topology key for spread
+  #   # @default -- `""` (defaults to `topology.kubernetes.io/zone`)
+  #   topologyKey: ""
+  #   # -- Enforcement policy, hard or soft
+  #   # @default -- `""` (defaults to `ScheduleAnyway`)
+  #   whenUnsatisfiable: ""
+  # # -- Redis HA statefulset container-level security context
+  # # @default -- See [values.yaml]
+  # containerSecurityContext:
+  #   readOnlyRootFilesystem: true
 
 # External Redis parameters
 externalRedis:
   # -- External Redis server host
-  host: ""
+  host: redis.database.svc.cluster.local
   # -- External Redis username
   username: ""
   # -- External Redis password
@@ -2332,7 +2342,7 @@ server:
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#tls-certificates-used-by-argocd-server
   certificateSecret:
     # -- Create argocd-server-tls secret
-    enabled: false
+    enabled: true
     # -- Annotations to be added to argocd-server-tls secret
     annotations: {}
     # -- Labels to be added to argocd-server-tls secret
@@ -2351,9 +2361,9 @@ server:
     # -- Server service type
     type: LoadBalancer
     # -- Server service http port for NodePort service type (only if `server.service.type` is set to "NodePort")
-    nodePortHttp: 30080
+    nodePortHttp: ""
     # -- Server service https port for NodePort service type (only if `server.service.type` is set to "NodePort")
-    nodePortHttps: 30443
+    nodePortHttps: ""
     # -- Server service http port
     servicePortHttp: 80
     # -- Server service https port
@@ -2445,7 +2455,7 @@ server:
   # Argo CD server ingress configuration
   ingress:
     # -- Enable an ingress resource for the Argo CD server
-    enabled: false
+    enabled: true
     # -- Specific implementation for ingress controller. One of `generic`, `aws` or `gke`
     ## Additional configuration might be required in related configuration sections
     controller: generic
@@ -2458,11 +2468,11 @@ server:
       # nginx.ingress.kubernetes.io/ssl-passthrough: "true"
 
     # -- Defines which ingress controller will implement the resource
-    ingressClassName: ""
+    ingressClassName: nginx
 
     # -- Argo CD server hostname
     # @default -- `""` (defaults to global.domain)
-    hostname: ""
+    hostname: argo.breeze-blocks.net
 
     # -- The path to Argo CD server
     path: /
@@ -2473,7 +2483,7 @@ server:
     # -- Enable TLS configuration for the hostname defined at `server.ingress.hostname`
     ## TLS certificate will be retrieved from a TLS secret `argocd-server-tls`
     ## You can create this secret via `certificate` or `certificateSecret` option
-    tls: false
+    tls: true
 
     # -- The list of additional hostnames to be covered by ingress record
     # @default -- `[]` (See [values.yaml])
@@ -2956,7 +2966,7 @@ repoServer:
   ## Note: Issuing certificates via cert-manager in not supported right now because it's not possible to restart repo server automatically without extra controllers.
   certificateSecret:
     # -- Create argocd-repo-server-tls secret
-    enabled: false
+    enabled: true
     # -- Annotations to be added to argocd-repo-server-tls secret
     annotations: {}
     # -- Labels to be added to argocd-repo-server-tls secret

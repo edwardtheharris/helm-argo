@@ -17,6 +17,12 @@
 *.orig
 *~
 # Various IDEs
+_static/
+manifests/
+.markdownlint*
+*.xml
+*.md
+charts/
 .project
 .idea/
 *.tmproj
