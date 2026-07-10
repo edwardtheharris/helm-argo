@@ -2,5 +2,5 @@ dependencies:
 - name: argo-cd
   repository: file://./charts/argo-cd
   version: 7.4.4
-digest: sha256:362ca176106baf8aac64a6e444a2f3ed7843a844266f3d360ef96e5512cd5597
-generated: "2024-08-18T09:10:30.245699144-07:00"
+digest: sha256:d558c2a81ebc3f64dc7c0136b4d95e311af7918458b22f242d9313ead8d7bd40
+generated: "2025-09-28T11:52:27.527864139-07:00"
