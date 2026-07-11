@@ -7,13 +7,12 @@ name = "pypi"
 loguru = "*"
 gitpython = "*"
 pipenv = "*"
+pre-commit = "*"
 
 [dev-packages]
-"sphinxcontrib.autoyaml" = "*"
 myst-parser = {extras = ["linkify"], version = "*"}
 sphinx = "*"
 sphinx-autobuild = "*"
 sphinx-book-theme = "*"
-sphinx-design = "*"
 sphinxemoji = "*"
 version-query = "*"
