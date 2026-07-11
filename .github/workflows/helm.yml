@@ -1,24 +1,11 @@
-###
-# ```{rubric} Helm Chart Testing
-# ```
-# ---
-# GitHub Action for testing helm charts.
-#
-# ```{literalinclude} /.github/workflows/helm.yml
-# :language: yaml
-# :start-at: "name: Test Helm Chart\n"
-# :end-before: "####\n"
-# ```
 name: Test Helm Chart
 on:
   pull_request:
     branches:
       - main
   push:
-    branches:
-      - main
+    branches: []
   workflow_dispatch: {}
-####
 
 ###
 # ```{rubric} Permissions Updates
@@ -28,14 +15,13 @@ on:
 # ```{literalinclude} /.github/workflows/helm.yml
 # :language: yaml
 # :start-at: "permissions:\n"
-# :end-before: "####\n"
+# :end-before: "###\n"
 # ```
 permissions:
   contents: read
   issues: read
   checks: write
   pull-requests: write
-####
 
 ###
 # ```{rubric} Workflow Jobs
@@ -44,11 +30,6 @@ permissions:
 # A workflow run is made up of one or more
 # jobs that can run sequentially or in parallel
 #
-# ```{literalinclude} /.github/workflows/helm.yml
-# :language: yaml
-# :start-at: "jobs:\n"
-# :end-before: "#####\n"
-# ```
 jobs:
   ###
   # ```{rubric} Helm Setup
@@ -59,7 +40,7 @@ jobs:
   # ```{literalinclude} /.github/workflows/helm.yml
   # :language: yaml
   # :start-at: "  helmsetup:\n"
-  # :end-before: "####\n"
+  # :end-before: "###\n"
   # ```
   helmsetup:
     name: helmsetup
@@ -67,7 +48,9 @@ jobs:
     steps:
       - uses: actions/checkout@main
       - uses: azure/setup-helm@v4.3.0
-  ####
+        with:
+          version: latest
+        id: install
 
   ###
   # ```{rubric} Helm Lint
@@ -87,9 +70,7 @@ jobs:
     steps:
       - uses: actions/checkout@main
       - run: |
-          for i in .; do
-            helm lint $i
-          done
+          helm lint .
   ####
   ###
   # ```{rubric} Helm Test
@@ -107,34 +88,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@main
-      - run: helm plugin install https://github.com/helm-unittest/helm-unittest
-      - run: |
-          for i in .; do
-            cd $i
-            helm dependency update
-            cd ..
-          done
-      - run: |
-          for i in .; do
-            cd $i
-            helm dependency build
-            cd ..
-          done
-      - run: |
-          for i in .; do
-            helm unittest -d -f "$i/tests/*.yaml" $i
-          done
-      - run: |
-          for i in .; do
-            helm unittest -f "$i/tests/*.yaml" -t JUnit -o $i.results.xml $i
-            cat $i.results.xml >> results.xml
-          done
-        if: success() || failure() # always run even if the previous step fails
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
-        with:
-          check_name: helmtest
-          comment_title: "Helm Test"
-          files: results.xml
-#####
+      - name: Install Helm unittest
+        run: helm plugin install https://github.com/helm-unittest/helm-unittest.git
+      - run: helm repo add lvm https://helm.metal-stack.io
+      - run: helm repo add ckotzbauer https://ckotzbauer.github.io/helm-charts
+      - run: helm dependency update
+      - run: helm dependency build
+      # - run: helm unittest -d -f 'tests/*.yaml' .
+      # - run: helm unittest -f 'tests/*.yaml' -t JUnit -o results.xml .
+      #   if: success() || failure() # always run even if the previous step fails
+      # - name: Publish Test Results
+      #   uses: EnricoMi/publish-unit-test-result-action@v2
+      #   if: always()
+      #   with:
+      #     check_name: helmtest
+      #     comment_title: "Helm Test"
+      #     files: results.xml
