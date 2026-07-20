@@ -630,11 +630,11 @@
         },
         "pydata-sphinx-theme": {
             "hashes": [
-                "sha256:225331e8ac4b32682c18fcac5a57a6f717c4e632cea5dd0e247b55155faeccde",
-                "sha256:a08b7f0b7f70387219dc659bff0893a7554d5eb39b59d3b8ef37b8401b7642d7"
+                "sha256:0da172d41e19a66de875f4002f7054b385372ec65763852193791e658d50bb4a",
+                "sha256:56744483c9d72c783e075de716ab95d486108b69605df7528078090b73f11f69"
             ],
-            "markers": "python_version >= '3.9'",
-            "version": "==0.16.1"
+            "markers": "python_version >= '3.11'",
+            "version": "==0.20.0"
         },
         "pygments": {
             "hashes": [
@@ -773,11 +773,11 @@
         },
         "soupsieve": {
             "hashes": [
-                "sha256:e121fd02e975c695e4e9e8774a5ee35d74714b59307868dcc5319ad2d9e3328e",
-                "sha256:e7e6b0769c8f51ed59acab6e994b00621096cfb1c640a7509295987388fbaf65"
+                "sha256:a2b2c76d67df2382d245409fd71e321a571717e58463efa32ace87dcadac2c12",
+                "sha256:acee8417325c5653e1377dc31eccad59eb82cbc65942afe6174c53b3aaad63fc"
             ],
-            "markers": "python_version >= '3.9'",
-            "version": "==2.8.4"
+            "markers": "python_version >= '3.10'",
+            "version": "==2.9"
         },
         "sphinx": {
             "hashes": [
@@ -799,12 +799,12 @@
         },
         "sphinx-book-theme": {
             "hashes": [
-                "sha256:4a7ebfc7da4395309ac942ddfc38fbec5c5254c3be22195e99ad12586fbda9e3",
-                "sha256:709605d308e1991c5ef0cf19c481dbe9084b62852e317fafab74382a0ee7ccfa"
+                "sha256:10fd57d667ee0b565928c3ce95562e281c5d1b94bd5a2aafc5cd41a5d498dcd0",
+                "sha256:fee3cd70573d9a8cd4ab380a3cb1f11139c24dcaa2cf47d06d7f924f1b44eaff"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.11'",
-            "version": "==1.2.0"
+            "version": "==1.4.0"
         },
         "sphinx-design": {
             "hashes": [
