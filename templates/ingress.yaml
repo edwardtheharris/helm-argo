@@ -1,18 +1,24 @@
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Values.service.name }}
+  name: {{ .Release.Name }}
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: the-hard-way-int
 spec:
   ingressClassName: nginx
   rules:
-  - http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ .Values.service.name }}
-            port:
-              number: 8080
+    - host: argo.breeze-blocks.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}
+                port:
+                  name: https
+  tls:
+    - hosts:
+        - argo.breeze-blocks.net
+      secretName: argocd-server-tls # as expected by argocd-server

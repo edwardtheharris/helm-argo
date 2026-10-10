@@ -30,31 +30,6 @@ apiVersion: v2
 # ```
 appVersion: "0.0.2"
 
-
-###
-# ```{rubric} Dependencies
-# ```
-# ---
-# A list of chart dependencies.
-#
-# ```{literalinclude} /Chart.yaml
-# :language: yaml
-# :start-at: "dependencies:\n"
-# :end-before: "###\n"
-# ```
-#
-# ```{code-block} yaml
-# - condition: local-static-provisioner.enabled
-#   name: local-static-provisioner
-#   repository: file://./local-static-provisioner/
-#   version: ~2
-# ```
-dependencies:
-- condition: argo-cd.enabled
-  name: argo-cd
-  repository: file://./charts/argo-cd
-  version: 7.4.4
-
 ###
 # ```{rubric} Description
 # ```
