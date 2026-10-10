@@ -1,18 +1,27 @@
-{{- if .Values.service.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.service.name }}
+  annotations:
+    metallb.io/ip-allocated-from-pool: the-hard-way
   labels:
-    {{ .Values.service.selectorLabels | toYaml | nindent 4 }}
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: {{ .Release.Name }}
+    app.kubernetes.io/part-of: argocd
+  name: {{ .Release.Name }}
 spec:
-  selector:
-    {{ .Values.service.selectorLabels | toYaml | nindent 4 }}
+  allocateLoadBalancerNodePorts: true
+  externalTrafficPolicy: Cluster
+  internalTrafficPolicy: Cluster
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
-  externalIPs:
-    - 192.168.5.40
-    - 192.168.5.50
-  type: {{ .Values.service.type }}
-{{- end -}}
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app.kubernetes.io/name: {{ .Release.Name }}
+  sessionAffinity: None
+  type: LoadBalancer

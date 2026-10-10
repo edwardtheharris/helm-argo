@@ -18,15 +18,12 @@ title: ArgoCD Helm Chart
 ```{toctree}
 :caption: contents
 
-monero/index
 tests/index
-charts/argo-cd/index
 ```
 
 ```{toctree}
 :caption: meta
 
-.github/index
 code_of_conduct
 contributing
 license
